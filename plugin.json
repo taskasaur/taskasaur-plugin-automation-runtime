@@ -1,0 +1,100 @@
+{
+  "id": "automation-runtime",
+  "name": "Automation Runtime",
+  "description": "TypeScript workflows executed on an explicitly selected device.",
+  "version": "1.0.0",
+  "platformApi": "^1.0.0",
+  "fieldSchemaApi": "^1.0.0",
+  "publisher": "taskasaur",
+  "license": "GPL-3.0-only",
+  "entrypoints": {
+    "server": "server.mjs"
+  },
+  "ui": {
+    "mode": "none",
+    "apiVersion": "^1.0.0",
+    "surfaces": []
+  },
+  "storage": {
+    "local": {
+      "mode": "dexie",
+      "collections": ["workflows", "workflow_runs"]
+    }
+  },
+  "permissions": ["automation-runtime.read", "automation-runtime.write"],
+  "dependencies": [],
+  "features": {},
+  "sharedServices": [
+    {
+      "id": "core.records",
+      "version": "^1",
+      "optional": false
+    },
+    {
+      "id": "core.jobs",
+      "version": "^1",
+      "optional": false
+    },
+    {
+      "id": "core.devices",
+      "version": "^1",
+      "optional": false
+    },
+    {
+      "id": "credentials.use",
+      "version": "^1",
+      "optional": false
+    },
+    {
+      "id": "core.server",
+      "version": "^1",
+      "optional": false
+    }
+  ],
+  "provides": {
+    "commands": [
+      "workflows.list",
+      "workflows.put",
+      "workflows.delete",
+      "workflow_runs.list",
+      "workflow_runs.put",
+      "workflow_runs.delete"
+    ],
+    "events": ["workflows.changed", "workflow_runs.changed"]
+  },
+  "consumes": {
+    "commands": [],
+    "events": []
+  },
+  "server": {
+    "routes": [
+      {
+        "path": "automation/hooks/*",
+        "methods": ["POST"],
+        "authentication": "plugin"
+      },
+      {
+        "path": "automation/cancel",
+        "methods": ["POST"],
+        "authentication": "workspace"
+      },
+      {
+        "path": "automation/signal",
+        "methods": ["POST"],
+        "authentication": "workspace"
+      },
+      {
+        "path": "automation/webhook",
+        "methods": ["POST"],
+        "authentication": "workspace"
+      },
+      {
+        "path": "automation/run",
+        "methods": ["POST"],
+        "authentication": "workspace"
+      }
+    ],
+    "background": true,
+    "mutationHooks": true
+  }
+}

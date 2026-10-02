@@ -1,0 +1,276 @@
+[
+  {
+    "id": "workflows",
+    "pluginId": "automation-runtime",
+    "name": "Workflows",
+    "version": 1,
+    "fields": [
+      {
+        "id": "name",
+        "label": "Name",
+        "pgType": "text",
+        "required": true,
+        "nullable": false,
+        "array": false,
+        "sensitive": false
+      },
+      {
+        "id": "graph",
+        "label": "Graph",
+        "pgType": "jsonb",
+        "required": false,
+        "nullable": true,
+        "array": false,
+        "default": {
+          "nodes": [],
+          "edges": []
+        },
+        "sensitive": false
+      },
+      {
+        "id": "target_device_id",
+        "label": "Run on",
+        "pgType": "uuid",
+        "required": false,
+        "nullable": true,
+        "array": false,
+        "sensitive": false,
+        "reference": "devices",
+        "control": "reference"
+      },
+      {
+        "id": "enabled",
+        "label": "Enabled",
+        "pgType": "boolean",
+        "required": false,
+        "nullable": true,
+        "array": false,
+        "default": false,
+        "sensitive": false
+      },
+      {
+        "id": "published_version",
+        "label": "Published version",
+        "pgType": "integer",
+        "required": false,
+        "nullable": true,
+        "array": false,
+        "sensitive": false
+      },
+      {
+        "id": "trigger_kind",
+        "label": "Trigger",
+        "pgType": "text",
+        "required": true,
+        "nullable": false,
+        "array": false,
+        "choices": ["manual", "schedule", "event", "webhook"],
+        "default": "manual",
+        "control": "select",
+        "sensitive": false
+      },
+      {
+        "id": "schedule_seconds",
+        "label": "Schedule interval in seconds",
+        "pgType": "integer",
+        "required": false,
+        "nullable": true,
+        "array": false,
+        "min": 10,
+        "max": 31536000,
+        "sensitive": false
+      },
+      {
+        "id": "schedule_start",
+        "label": "Schedule starts",
+        "pgType": "timestamp with time zone",
+        "required": false,
+        "nullable": true,
+        "array": false,
+        "sensitive": false
+      },
+      {
+        "id": "catch_up",
+        "label": "Missed schedule",
+        "pgType": "text",
+        "required": true,
+        "nullable": false,
+        "array": false,
+        "choices": ["skip", "once", "all"],
+        "default": "once",
+        "control": "select",
+        "sensitive": false
+      },
+      {
+        "id": "event_type",
+        "label": "Committed event type",
+        "pgType": "text",
+        "required": false,
+        "nullable": true,
+        "array": false,
+        "sensitive": false
+      },
+      {
+        "id": "allow_trusted_code",
+        "label": "Allow trusted TypeScript code",
+        "pgType": "boolean",
+        "required": false,
+        "nullable": true,
+        "array": false,
+        "default": false,
+        "description": "Code runs with this device's OS account. Enable only for code you trust.",
+        "sensitive": false
+      },
+      {
+        "id": "offline_policy",
+        "label": "Offline policy",
+        "pgType": "text",
+        "required": true,
+        "nullable": false,
+        "array": false,
+        "choices": ["fail", "waitForDevice"],
+        "default": "fail",
+        "control": "select",
+        "sensitive": false
+      },
+      {
+        "id": "dispatch_timeout_seconds",
+        "label": "Wait timeout",
+        "pgType": "integer",
+        "required": false,
+        "nullable": true,
+        "array": false,
+        "min": 1,
+        "max": 86400,
+        "sensitive": false
+      },
+      {
+        "id": "description",
+        "label": "Description",
+        "pgType": "text",
+        "required": false,
+        "nullable": true,
+        "array": false,
+        "control": "textarea",
+        "sensitive": false
+      }
+    ]
+  },
+  {
+    "id": "workflow_runs",
+    "pluginId": "automation-runtime",
+    "name": "Workflow runs",
+    "version": 1,
+    "fields": [
+      {
+        "id": "workflow_id",
+        "label": "Workflow",
+        "pgType": "uuid",
+        "required": true,
+        "nullable": false,
+        "array": false,
+        "sensitive": false,
+        "reference": "workflows",
+        "control": "reference"
+      },
+      {
+        "id": "target_device_id",
+        "label": "Run on",
+        "pgType": "uuid",
+        "required": true,
+        "nullable": false,
+        "array": false,
+        "sensitive": false,
+        "reference": "devices",
+        "control": "reference"
+      },
+      {
+        "id": "workflow_version",
+        "label": "Workflow version",
+        "pgType": "integer",
+        "required": true,
+        "nullable": false,
+        "array": false,
+        "sensitive": false
+      },
+      {
+        "id": "status",
+        "label": "Status",
+        "pgType": "text",
+        "required": true,
+        "nullable": false,
+        "array": false,
+        "choices": [
+          "queued",
+          "running",
+          "waiting",
+          "completed",
+          "failed",
+          "cancelled",
+          "expired"
+        ],
+        "default": "queued",
+        "control": "select",
+        "sensitive": false
+      },
+      {
+        "id": "input",
+        "label": "Input",
+        "pgType": "jsonb",
+        "required": false,
+        "nullable": true,
+        "array": false,
+        "default": {},
+        "sensitive": false
+      },
+      {
+        "id": "output",
+        "label": "Output",
+        "pgType": "jsonb",
+        "required": false,
+        "nullable": true,
+        "array": false,
+        "default": {},
+        "sensitive": false
+      },
+      {
+        "id": "steps",
+        "label": "Steps",
+        "pgType": "jsonb",
+        "required": false,
+        "nullable": true,
+        "array": false,
+        "default": [],
+        "sensitive": false
+      },
+      {
+        "id": "started_at",
+        "label": "Started",
+        "pgType": "timestamp with time zone",
+        "required": false,
+        "nullable": true,
+        "array": false,
+        "sensitive": false
+      },
+      {
+        "id": "ended_at",
+        "label": "Ended",
+        "pgType": "timestamp with time zone",
+        "required": false,
+        "nullable": true,
+        "array": false,
+        "sensitive": false
+      },
+      {
+        "id": "error",
+        "label": "Error",
+        "pgType": "text",
+        "required": false,
+        "nullable": true,
+        "array": false,
+        "control": "textarea",
+        "sensitive": false
+      }
+    ]
+  }
+]
